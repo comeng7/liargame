@@ -8,39 +8,58 @@
       body {
         margin: 0;
         padding: 0;
-        font-family: sans-serif;
+        font-family: 'Noto Sans KR', sans-serif;
         display: flex;
         flex-direction: column;
         align-items: center;
+        background: linear-gradient(135deg, #ece9e6, #ffffff);
       }
       .container {
-        max-width: 400px;
+        max-width: 450px;
         width: 90%;
         margin: 20px auto;
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 12px;
         text-align: center;
+        background-color: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
       }
       select,
       button {
         font-size: 1rem;
-        padding: 8px;
+        padding: 10px;
         width: 100%;
         box-sizing: border-box;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        transition: border-color 0.2s ease, background-color 0.2s ease;
+      }
+      select:focus,
+      button:hover {
+        outline: none;
+        border-color: #4285f4;
+        background-color: #f0f8ff;
       }
       #gameArea {
         display: none;
         flex-direction: column;
-        gap: 10px;
+        gap: 12px;
         text-align: center;
       }
       .player-info {
-        font-size: 1.2rem;
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: #444;
+        margin-top: 6px;
       }
       .word-display {
         font-size: 1.4rem;
         margin: 10px 0;
+        min-height: 2.2em;
+        color: #333;
       }
       .hidden {
         visibility: hidden;
@@ -297,10 +316,11 @@
         return arr[Math.floor(Math.random() * arr.length)];
       }
 
-      // 11명 중 3명을 liar로 설정 (현재 코드는 2명)
+      // 11명 중 3명을 liar로 설정
+      // 기존 코드에선 2명을 아래 liarCount에 할당했으므로 필요 시 수정 가능
       function assignRoles() {
         roles = Array(11).fill('normal');
-        let liarCount = 2; // 이 부분을 변경하지 않고 그대로 둡니다.
+        let liarCount = 2;
         while (liarCount > 0) {
           const idx = Math.floor(Math.random() * 11);
           if (roles[idx] === 'normal') {
@@ -310,13 +330,16 @@
         }
       }
 
-      // 게임 세팅
+      // 게임 시작
       startBtn.addEventListener('click', () => {
         const selectedCategory = categorySelect.value;
         if (!selectedCategory) {
           alert('카테고리를 선택해주세요.');
           return;
         }
+        categorySelect.disabled = true;
+        startBtn.disabled = true;
+
         normalWord = getRandomWord(selectedCategory);
         do {
           liarWord = getRandomWord(selectedCategory);
